@@ -13,6 +13,7 @@ function soundcloud:new()
 end
 
 function soundcloud:init()
+  print("[soundcloud]: Setting up clientId for fetch tracks...")
   local mainsite_body = http.request('https://soundcloud.com/')
   if mainsite_body == nil then return self.fetchFailed(self) end
 
@@ -32,10 +33,11 @@ function soundcloud:init()
   if matched == nil then return self.fetchFailed(self) end
   local clientId = matched:sub(11, 41 - matched:len())
   self.clientId = clientId
+  print("[soundcloud]: Setting up clientId for fetch tracks successfully")
 end
 
 function soundcloud:fetchFailed()
-  print 'Failed to fetch clientId.'
+  print '[soundcloud]: Failed to fetch clientId.'
 end
 
 function soundcloud:search(query)
@@ -54,11 +56,34 @@ function soundcloud:search(query)
     .. "&app_locale=en"
 
   local res_body = http.request(query_link)
-  return json.decode(res_body)
+  local decoded = json.decode(res_body)
+  local res = {}
+  local counter = 1
+
+  for _, value in pairs(decoded.collection) do
+    if value.kind ~= "track" then goto continue end
+    res[counter] = soundcloud:buildTrack(value)
+    counter = counter + 1
+    ::continue::
+  end
+
+  return res
 end
 
-local newSound = soundcloud:new()
-newSound:init()
-newSound:search("Hello - abel")
+function soundcloud:buildTrack(data)
+  return {
+    info = {
+      title = data.title,
+      author = data.user.permalink,
+      identifier = data.id,
+      uri = data.permalink_url,
+      is_stream = false,
+      source_name = "soundcloud",
+      isrc = data.urn,
+      artwork_url = data.artwork_url,
+      length = data.full_duration
+    }
+  }
+end
 
 return soundcloud
