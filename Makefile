@@ -1,10 +1,16 @@
 hatsuharu:
+	mkdir build
+	make linux
+
+.PHONY: clean
+linux:
 	luastatic src/hatsuharu.lua /usr/lib/x86_64-linux-gnu/liblua5.4.a
 	rm -rf hatsuharu.luastatic.c
+	mv hatsuharu ./build/hatsuharu.linux
 
 .PHONY: clean
 clean:
-	rm -rf hatsuharu
+	rm -rf build
 
 .PHONY: install
 install:

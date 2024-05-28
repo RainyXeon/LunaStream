@@ -1,6 +1,6 @@
 Url = {}
 
-function Url:urlencode(url)
+function Url:encode(url)
   if url == nil then
     return
   end
@@ -12,7 +12,7 @@ function Url:urlencode(url)
   return url
 end
 
-function Url:urldecode(url)
+function Url:decode(url)
   if url == nil then
     return
   end

@@ -1,4 +1,4 @@
-local http = require'socket.http'
+local http = require'src.utils.http'
 local url = require 'src.utils.url'
 local json = require 'cjson'
 local soundcloud = {}
@@ -14,7 +14,7 @@ end
 
 function soundcloud:init()
   print("[soundcloud]: Setting up clientId for fetch tracks...")
-  local mainsite_body = http.request('https://soundcloud.com/')
+  local mainsite_body = http:request('https://soundcloud.com/')
   if mainsite_body == nil then return self.fetchFailed(self) end
 
   local assetId = string.gmatch(mainsite_body, "https://a%-v2%.sndcdn%.com/assets/[^%s]+%.js")
@@ -26,7 +26,7 @@ function soundcloud:init()
     call_time = call_time + 1
   end
 
-  local data_body = http.request(assetId())
+  local data_body = http:request(assetId())
   if data_body == nil then return self.fetchFailed(self) end
 
   local matched = data_body:match('client_id=[^%s]+')
@@ -44,7 +44,7 @@ function soundcloud:search(query)
   local query_link =
     self.baseUrl
     .. "/search"
-    .. "?q=" .. url:urlencode(query)
+    .. "?q=" .. url:encode(query)
     .. "&variant_ids="
     .. "&facet=model"
     .. "&user_id=992000-167630-994991-450103"
@@ -71,6 +71,11 @@ function soundcloud:search(query)
 end
 
 function soundcloud:buildTrack(data)
+  local isrc = nil
+  if type(data.publisher_metadata) == "table" then
+    isrc = data.publisher_metadata.isrc
+  end
+
   return {
     info = {
       title = data.title,
@@ -78,8 +83,9 @@ function soundcloud:buildTrack(data)
       identifier = data.id,
       uri = data.permalink_url,
       is_stream = false,
+      is_seekable = true,
       source_name = "soundcloud",
-      isrc = data.urn,
+      isrc = isrc,
       artwork_url = data.artwork_url,
       length = data.full_duration
     }

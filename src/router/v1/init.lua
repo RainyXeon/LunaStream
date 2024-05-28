@@ -11,7 +11,7 @@ function V1:handler(req, res)
   end
 
   if (string.find(path, "/loadtracks")) then
-    return loadtracksRoute:load(res)
+    return loadtracksRoute:load(req, res)
   end
 
 end
