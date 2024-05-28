@@ -1,1 +1,1 @@
-lua src/main.lua
+lua src/hatsuharu.lua

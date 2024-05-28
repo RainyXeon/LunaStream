@@ -11,3 +11,5 @@ install:
 	sudo luarocks install pegasus
 	sudo luarocks install lua-cjson
 	sudo luarocks install luastatic
+	sudo apt install libssl-dev
+	sudo luarocks install luasec

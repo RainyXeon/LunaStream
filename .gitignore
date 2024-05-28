@@ -1,3 +1,7 @@
 hatsuharu
 hatsuharu.luastatic.c
 config.json
+/luarocks
+/lua
+/lua_modules
+/.luarocks
