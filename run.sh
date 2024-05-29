@@ -1,1 +1,1 @@
-lua src/hatsuharu.lua
+lua lunastream/main.lua

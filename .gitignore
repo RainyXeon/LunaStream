@@ -6,3 +6,4 @@ config.json
 /lua_modules
 /.luarocks
 build/
+.luapak/
