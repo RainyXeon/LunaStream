@@ -1,3 +1,4 @@
+require 'lunastream.preinstaller.init'
 local pegasus = require 'pegasus'
 local router = require 'lunastream.router.init'
 local metadata = require 'lunastream.constants.metadata'
