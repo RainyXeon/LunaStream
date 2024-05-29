@@ -41,14 +41,14 @@ clean:
 .PHONY: install
 install:
 	sudo apt install libcurl4-nss-dev zip unzip
-	sudo luarocks install pegasus
-	sudo luarocks install lua-cjson
-	sudo luarocks install luastatic
-	sudo luarocks install lua-curl CURL_INCDIR=/usr/include/x86_64-linux-gnu
+	luarocks install pegasus
+	luarocks install lua-cjson
+	luarocks install luastatic
+	luarocks install lua-curl CURL_INCDIR=/usr/include/x86_64-linux-gnu
 
 .PHONY: uninstall
 uninstall:
-	sudo luarocks install pegasus
-	sudo luarocks remove lua-cjson
-	sudo luarocks remove luastatic
-	sudo luarocks remove lua-curl
+	luarocks remove pegasus
+	luarocks remove lua-cjson
+	luarocks remove luastatic
+	luarocks remove lua-curl
