@@ -18,8 +18,13 @@ ROUTER = $(RO_INIT) $(RO_V1)
 # lunastream/constants
 CO_METADATA = lunastream/constants/metadata.lua
 CONSTANTS = $(CO_METADATA)
+# lunastream/preinstaller
+PRE_INIT = lunastream/preinstaller/init.lua
+PRE_LINUX = lunastream/preinstaller/linux.lua
+PRE_LUAROCKS = lunastream/preinstaller/luarocks.lua
+PREINSTALLER = $(PRE_INIT) $(PRE_LINUX) $(PRE_LUAROCKS)
 
-FINAL = $(UTILS) $(SOURCES) $(ROUTER) $(CONSTANTS)
+FINAL = $(UTILS) $(SOURCES) $(ROUTER) $(CONSTANTS) $(PREINSTALLER)
 
 lunastream:
 	make linux
@@ -32,7 +37,7 @@ linux_pack:
 .PHONY: linux
 linux:
 	mkdir build
-	luastatic $(ENTRYPOINT) $(FINAL) /usr/lib/x86_64-linux-gnu/liblua5.4.a
+	./lua_modules/bin/luastatic $(ENTRYPOINT) $(FINAL) /usr/lib/x86_64-linux-gnu/liblua5.1.a -I/usr/include/lua5.1
 	rm -rf main.luastatic.c
 	mv main build/lunastream.linux
 
@@ -43,14 +48,14 @@ clean:
 .PHONY: install
 install:
 	sudo apt install libcurl4-nss-dev zip unzip
-	sudo luarocks install pegasus
-	sudo luarocks install lua-cjson
-	sudo luarocks install luastatic
-	sudo luarocks install lua-curl CURL_INCDIR=/usr/include/x86_64-linux-gnu
+	luarocks install pegasus --tree lua_modules
+	luarocks install lua-cjson --tree lua_modules
+	luarocks install luastatic --tree lua_modules
+	luarocks install lua-curl CURL_INCDIR=/usr/include/x86_64-linux-gnu --tree lua_modules
 
 .PHONY: uninstall
 uninstall:
-	sudo luarocks remove pegasus
-	sudo luarocks remove lua-cjson
-	sudo luarocks remove luastatic
-	sudo luarocks remove lua-curl
+	luarocks remove pegasus --tree lua_modules
+	luarocks remove lua-cjson --tree lua_modules
+	luarocks remove luastatic --tree lua_modules
+	luarocks remove lua-curl --tree lua_modules

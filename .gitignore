@@ -7,3 +7,5 @@ config.json
 /.luarocks
 build/
 .luapak/
+package-lock.json
+node_modules/

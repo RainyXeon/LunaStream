@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "d:/Github/Hatsuharu",
-      "program": "d:/Github/Hatsuharu/build/Debug/outDebug",
+      "cwd": "d:/Github/LunaStream",
+      "program": "d:/Github/LunaStream/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

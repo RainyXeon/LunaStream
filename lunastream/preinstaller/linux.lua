@@ -3,46 +3,41 @@
 local linux_installer = {}
 
 function linux_installer:check()
-  local nonexists = ""
-  local isLuarocksExist =
-    linux_installer:exists_checker(
-      "luarocks",
-      "LuaRocks",
-      "--version"
-    )
-  if not isLuarocksExist then
-    nonexists = "luarocks " .. nonexists
-  end
+	local nonexists = ""
 
-  local isMakeExist =
-    linux_installer:exists_checker(
-      "make",
-      "Free Software Foundation",
-      "--version"
-    )
-  if not isMakeExist then
-    nonexists = "make " .. nonexists
-  end
+	local isLuarocksExist =
+		linux_installer:exists_checker("luarocks", "luarocks")
+	if not isLuarocksExist then
+		nonexists = "luarocks=3.8.0+dfsg1-1 " .. nonexists
+	end
 
-  if (nonexists:len() > 0) then linux_installer:install(nonexists) end
+	local isCurlExist =
+		linux_installer:exists_checker("libcurl4-nss-dev", "(NSS flavour)")
+	if not isCurlExist then
+		nonexists = "libcurl4-nss-dev " .. nonexists
+	end
+
+	if (nonexists:len() > 0) then
+		linux_installer:install(nonexists)
+	end
 end
 
-function linux_installer:exists_checker(program, expect, arg)
-  local handle = io.popen(program .. " " .. arg)
-  local result = handle:read("*a")
-  handle:close()
-  if not result:find(expect) then
-    print("[ProgramChecker]: (" .. program ..") does not exist!")
-    return false
-  else
-    print("[ProgramChecker]: (" .. program .. ") exist!")
-    return true
-  end
+function linux_installer:exists_checker(program, supposed)
+	local handle = io.popen("dpkg -l | grep " .. program)
+	local result = handle:read("*a")
+	handle:close()
+	if not result:find(supposed) then
+		print("[LibChecker]: (" .. program .. ") does not exist!")
+		return false
+	else
+		print("[LibChecker]: (" .. program .. ") exist!")
+		return true
+	end
 end
 
 function linux_installer:install(list)
-  print("[ProgramChecker]: Perform installing some missing program...")
-  os.execute("sudo apt install " .. list)
+	print("[LibChecker]: Perform installing some missing program...")
+	os.execute("sudo apt install " .. list)
 end
 
 return linux_installer

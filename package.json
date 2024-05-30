@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@prettier/plugin-lua": "^0.0.3"
+  }
+}
