@@ -1,47 +1,12 @@
-# All file have to build
-ENTRYPOINT = lunastream/main.lua
-# lunastream/utils
-U_HTTP = lunastream/utils/http.lua
-U_READCONFIG = lunastream/utils/readconfig.lua
-U_URL = lunastream/utils/url.lua
-U_SETPATH = lunastream/utils/setpath.lua
-UTILS = $(U_HTTP) $(U_READCONFIG) $(U_URL) $(U_SETPATH)
-# lunastream/sources
-SR_SOUNDCLOUD = lunastream/sources/soundcloud.lua
-SOURCES = $(SR_SOUNDCLOUD)
-# lunastream/router
-RO_INIT = lunastream/router/init.lua
-RO_V1_INIT = lunastream/router/v1/init.lua
-RO_V1_INFO = lunastream/router/v1/info.lua
-RO_V1_LOADTRACKS = lunastream/router/v1/loadtracks.lua
-RO_V1 = $(RO_V1_INIT) $(RO_V1_INFO) $(RO_V1_LOADTRACKS)
-ROUTER = $(RO_INIT) $(RO_V1)
-# lunastream/constants
-CO_METADATA = lunastream/constants/metadata.lua
-CONSTANTS = $(CO_METADATA)
-# lunastream/preinstaller
-PRE_INIT = lunastream/preinstaller/init.lua
-PRE_LINUX = lunastream/preinstaller/linux.lua
-PRE_LUAROCKS = lunastream/preinstaller/luarocks.lua
-PRE_OS = lunastream/preinstaller/os.lua
-PREINSTALLER = $(PRE_INIT) $(PRE_LINUX) $(PRE_LUAROCKS) $(PRE_OS)
-
-FINAL = $(UTILS) $(SOURCES) $(ROUTER) $(CONSTANTS) $(PREINSTALLER)
-
-lunastream:
-	make linux
-
-.PHONY: linux_pack
-linux_pack:
-	make linux
-	zip lunastream_linux.zip lunastream.linux
-
 .PHONY: linux
 linux:
 	mkdir build
-	./lua_modules/bin/luastatic $(ENTRYPOINT) $(FINAL) /usr/lib/x86_64-linux-gnu/liblua5.1.a -I/usr/include/lua5.1
+	node ./scripts/build_linux.js
 	rm -rf main.luastatic.c
 	mv main build/lunastream.linux
+
+lunastream:
+	make linux
 
 .PHONY: clean
 clean:
@@ -49,7 +14,8 @@ clean:
 
 .PHONY: install
 install:
-	sudo apt install libcurl4-nss-dev zip unzip
+	sudo apt install libcurl4-nss-dev zip unzip npm
+	npm i
 	luarocks install luarocks 3.8.0-1 --tree lua_modules
 	luarocks install pegasus --tree lua_modules
 	luarocks install lua-cjson --tree lua_modules

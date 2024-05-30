@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "@prettier/plugin-lua": "^0.0.3"
+    "@prettier/plugin-lua": "^0.0.3",
+    "recursive-readdir": "^2.2.3"
   }
 }
