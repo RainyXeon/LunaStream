@@ -10,7 +10,7 @@ if os_name:find("Linux") then
 	linux_installer:check()
 	luarocks_checker:check()
 else
-	print("Your OS currently not supported LunaStream")
+	print("Your OS currently does not support LunaStream")
 	print("Supported OS:")
 	for _, v in pairs(supported) do
 		print("- " .. v)
