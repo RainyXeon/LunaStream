@@ -4,7 +4,8 @@ ENTRYPOINT = lunastream/main.lua
 U_HTTP = lunastream/utils/http.lua
 U_READCONFIG = lunastream/utils/readconfig.lua
 U_URL = lunastream/utils/url.lua
-UTILS = $(U_HTTP) $(U_READCONFIG) $(U_URL)
+U_SETPATH = lunastream/utils/setpath.lua
+UTILS = $(U_HTTP) $(U_READCONFIG) $(U_URL) $(U_SETPATH)
 # lunastream/sources
 SR_SOUNDCLOUD = lunastream/sources/soundcloud.lua
 SOURCES = $(SR_SOUNDCLOUD)
@@ -22,7 +23,8 @@ CONSTANTS = $(CO_METADATA)
 PRE_INIT = lunastream/preinstaller/init.lua
 PRE_LINUX = lunastream/preinstaller/linux.lua
 PRE_LUAROCKS = lunastream/preinstaller/luarocks.lua
-PREINSTALLER = $(PRE_INIT) $(PRE_LINUX) $(PRE_LUAROCKS)
+PRE_OS = lunastream/preinstaller/os.lua
+PREINSTALLER = $(PRE_INIT) $(PRE_LINUX) $(PRE_LUAROCKS) $(PRE_OS)
 
 FINAL = $(UTILS) $(SOURCES) $(ROUTER) $(CONSTANTS) $(PREINSTALLER)
 

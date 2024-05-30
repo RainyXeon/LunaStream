@@ -1,11 +1,19 @@
 local linux_installer = require"lunastream.preinstaller.linux"
-local isWin = package.config:sub(1, 1) == "\\"
-if not isWin then
-	os.execute(
-		"export LUA_PATH='lua_modules/share/lua/5.1/?.lua;lua_modules/share/lua/5.1/?/init.lua;;'"
-	)
-	os.execute("export LUA_CPATH='lua_modules/lib/lua/5.1/?.so' ")
-	linux_installer:check()
-end
 local luarocks_checker = require"lunastream.preinstaller.luarocks"
-luarocks_checker:check()
+local osn = require"lunastream.preinstaller.os"
+local supported = { "Debian Distro" }
+local os_name = osn:get()
+
+print("[PreInstaller]: Detected OS: " .. os_name)
+
+if os_name:find("Linux") then
+	linux_installer:check()
+	luarocks_checker:check()
+else
+	print("Your OS currently not supported LunaStream")
+	print("Supported OS:")
+	for _, v in pairs(supported) do
+		print("- " .. v)
+	end
+	os.exit()
+end
