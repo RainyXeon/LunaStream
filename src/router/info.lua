@@ -1,5 +1,5 @@
-local metadata = require("src.constants.metadata")
-local json = require("deps.json")
+local metadata = require("../constants/metadata.lua")
+local json = require("json")
 
 return function (req, res)
   res.body = json.encode(metadata)

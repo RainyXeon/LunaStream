@@ -1,4 +1,4 @@
-local metadata = require("src.constants.metadata")
+local metadata = require("../constants/metadata.lua")
 
 return function (req, res)
   res.body = metadata.version.semver

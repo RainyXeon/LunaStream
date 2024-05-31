@@ -9,6 +9,7 @@ return {
   dependencies = {
     "creationix/weblit@3.1.2",
     "luvit/luvit@2.18.1",
+    "creationix/coro-http@v3.2.3"
   },
   files = {
     "**.lua",
