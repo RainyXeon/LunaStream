@@ -1,11 +1,9 @@
+---@diagnostic disable: undefined-global
 local metadata = require"lunastream.constants.metadata"
-local json = require"cjson"
-local json_string = json.encode(metadata)
+local turbo = require("turbo")
 
-local infoRoute = {}
-
-function infoRoute:load(res)
-	return res:write(json_string)
+local InfoV1Handler = class("InfoV1Handler", turbo.web.RequestHandler)
+function InfoV1Handler:get()
+  self:write(metadata)
 end
-
-return infoRoute
+return InfoV1Handler

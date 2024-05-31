@@ -22,8 +22,8 @@ const handler = (err, stdout, stderr) => {
   }
   fileString = join(__dirname, "..", "lunastream", "main.lua") + " " + fileString
   const luastatic = "./lua_modules/bin/luastatic" 
-  const lualib = "/usr/lib/x86_64-linux-gnu/liblua5.1.a"
-  const luainclude = "-I/usr/include/lua5.1"
+  const lualib = "/usr/local/lib/libluajit-5.1.a"
+  const luainclude = "-I/usr/local/include/luajit-2.1"
   const command = `${luastatic} ${fileString} ${lualib} ${luainclude}`
   await exec(command, handler);
 })()

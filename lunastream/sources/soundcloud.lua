@@ -58,7 +58,7 @@ function soundcloud:search(query)
 			query
 		) .. "&variant_ids=" .. "&facet=model" .. "&user_id=992000-167630-994991-450103" .. "&client_id=" .. self.clientId .. "&limit=" .. "20" .. "&offset=0" .. "&linked_partitioning=1" .. "&app_version=1679652891" .. "&app_locale=en"
 
-	local res_body = http.request(query_link)
+	local res_body = http:request(query_link)
 	local decoded = json.decode(res_body)
 	local res = {}
 	local counter = 1

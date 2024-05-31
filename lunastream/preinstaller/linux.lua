@@ -27,16 +27,16 @@ function linux_installer:exists_checker(program, supposed)
 	local result = handle:read("*a")
 	handle:close()
 	if not result:find(supposed) then
-		print("[LibInstaller]: (" .. program .. ") does not exist!")
+		print("[LibInstaller] (" .. program .. ") does not exist!")
 		return false
 	else
-		print("[LibInstaller]: (" .. program .. ") exist!")
+		print("[LibInstaller] (" .. program .. ") exist!")
 		return true
 	end
 end
 
 function linux_installer:install(list)
-	print("[LibInstaller]: Perform installing some missing program...")
+	print("[LibInstaller] Perform installing some missing program...")
 	os.execute("sudo apt install " .. list)
 end
 

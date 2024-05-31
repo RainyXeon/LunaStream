@@ -1,29 +1,16 @@
-local json = require"cjson"
+---@diagnostic disable: undefined-global
 local source_soundcloud = require"lunastream.sources.soundcloud"
-local url = require"lunastream.utils.url"
-
-local loadtrack = {}
 local soundcloud = source_soundcloud:new()
-
 soundcloud:init()
 
-function loadtrack:load(req, res)
-	if type(req.querystring) ~= "table" or type(
-		req.querystring.identifier
-	) ~= "string" then
-		return res:statusCode(400, "identifier param not found!"):write(
-			json.encode({ error = "identifier param not found!" })
-		)
-	end
+local turbo = require("turbo")
+local LoadTracksV1Handler = class("LoadTracksV1Handler", turbo.web.RequestHandler)
 
-	local resolve = soundcloud:search(url:decode(req.querystring.identifier))
-
-	return res:write(
-		json.encode({
-			loadType = "SEARCH",
-			data = resolve,
-		})
-	)
+function LoadTracksV1Handler:get()
+	local resolve = soundcloud:search("MGMT - Little Dark Age")
+	self:write({
+		loadType = "SEARCH",
+		-- data = resolve,
+	})
 end
-
-return loadtrack
+return LoadTracksV1Handler

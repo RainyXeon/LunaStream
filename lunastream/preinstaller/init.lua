@@ -4,7 +4,7 @@ local osn = require"lunastream.preinstaller.os"
 local supported = { "Debian Distro" }
 local os_name = osn:get()
 
-print("[PreInstaller]: Detected OS: " .. os_name)
+print("[PreInstaller] Detected OS: " .. os_name)
 
 if os_name:find("Linux") then
 	linux_installer:check()
