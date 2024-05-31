@@ -1,11 +1,1 @@
-hatsuharu
-hatsuharu.luastatic.c
-config.json
-/luarocks
-/lua
-/lua_modules
-/.luarocks
-build/
-.luapak/
-package-lock.json
-node_modules/
+deps/
