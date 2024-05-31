@@ -1,2 +1,4 @@
 LunaStream
 deps/
+config.json
+test.lua
