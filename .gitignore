@@ -1,4 +1,5 @@
 LunaStream
+LunaStream.exe
 deps/
 config.json
 test.lua

@@ -1,1 +1,3 @@
-require("./src/main.lua")
+return require('./bootstrap.lua')(function (...)
+  require("./src/main.lua")
+end, ...)
