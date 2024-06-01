@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global
 --[[
 
 Copyright 2014 The Luvit Authors. All Rights Reserved.

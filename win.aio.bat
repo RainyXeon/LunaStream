@@ -1,0 +1,1 @@
+debian -c sh aio.sh

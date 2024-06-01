@@ -3,3 +3,4 @@ LunaStream.exe
 deps/
 config.json
 test.lua
+build/
