@@ -1,8 +1,16 @@
-local sources = {}
+local soundcloud = require("../sources/soundcloud.lua")
 
-function sources:search(source, query)
-  if source == "scsearch" then
-  end
+function Init()
+  soundcloud.init()
 end
 
-return sources
+function Search(query, source)
+  if source == "scsearch" then
+    return soundcloud.search(query)
+  else return nil, "Source invalid" end
+end
+
+return {
+  init = Init,
+  search = Search
+}

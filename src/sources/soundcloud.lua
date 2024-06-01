@@ -7,11 +7,11 @@ local soundcloud = {
 	baseUrl = "https://api-v2.soundcloud.com",
 }
 
-function soundcloud:init()
+function soundcloud.init()
 	print("[soundcloud]: Setting up clientId for fetch tracks...")
 	local _, mainsite_body = http.request("GET", "https://soundcloud.com/")
 	if mainsite_body == nil then
-		return soundcloud:fetchFailed()
+		return soundcloud.fetchFailed()
 	end
 
 	local assetId =
@@ -20,7 +20,7 @@ function soundcloud:init()
 			"https://a%-v2%.sndcdn%.com/assets/[^%s]+%.js"
 		)
 	if assetId() == nil then
-		return soundcloud:fetchFailed()
+		return soundcloud.fetchFailed()
 	end
 
 	local call_time = 0
@@ -31,29 +31,32 @@ function soundcloud:init()
 
 	local _, data_body = http.request("GET", assetId())
 	if data_body == nil then
-		return soundcloud:fetchFailed()
+		return soundcloud.fetchFailed()
 	end
 
 	local matched = data_body:match("client_id=[^%s]+")
 	if matched == nil then
-		return soundcloud:fetchFailed()
+		return soundcloud.fetchFailed()
 	end
 	local clientId = matched:sub(11, 41 - matched:len())
 	soundcloud["clientId"] = clientId
 	print("[soundcloud]: Setting up clientId for fetch tracks successfully")
 end
 
-function soundcloud:fetchFailed()
+function soundcloud.fetchFailed()
 	print("[soundcloud]: Failed to fetch clientId.")
 end
 
-function soundcloud:search(query)
+function soundcloud.search(query)
 	local query_link =
-		soundcloud.baseUrl .. "/search" .. "?q=" .. url:encode(
+		soundcloud.baseUrl .. "/search" .. "?q=" .. url.encode(
 			query
 		) .. "&variant_ids=" .. "&facet=model" .. "&user_id=992000-167630-994991-450103" .. "&client_id=" .. soundcloud.clientId .. "&limit=" .. "20" .. "&offset=0" .. "&linked_partitioning=1" .. "&app_version=1679652891" .. "&app_locale=en"
 
-	local _, res_body = http.request("GET", query_link)
+	local response, res_body = http.request("GET", query_link)
+	if response.code ~= 200 then
+		return nil, "Server response error: " .. response.code
+	end
 	local decoded = json.decode(res_body)
 	local res = {}
 	local counter = 1
@@ -61,15 +64,15 @@ function soundcloud:search(query)
 	for _, value in pairs(decoded.collection) do
 		if value.kind ~= "track" then
 		else
-			res[counter] = soundcloud:buildTrack(value)
+			res[counter] = soundcloud.buildTrack(value)
 			counter = counter + 1
 		end
 	end
 
-	return res
+	return res, nil
 end
 
-function soundcloud:buildTrack(data)
+function soundcloud.buildTrack(data)
 	local isrc = nil
 	if type(data.publisher_metadata) == "table" then
 		isrc = data.publisher_metadata.isrc

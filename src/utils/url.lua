@@ -1,6 +1,4 @@
-Url = {}
-
-function Url:encode(url)
+function Encode(url)
 	if url == nil then return end
 	url = url:gsub("\n", "\r\n")
 	url = url:gsub("([^%w ])", function(c)
@@ -10,7 +8,7 @@ function Url:encode(url)
 	return url
 end
 
-function Url:decode(url)
+function Decode(url)
 	if url == nil then return end
 	url = url:gsub("+", " ")
 	url = url:gsub("%%(%x%x)", function(x)
@@ -19,4 +17,7 @@ function Url:decode(url)
 	return url
 end
 
-return Url
+return {
+	decode = Decode,
+	encode = Encode
+}

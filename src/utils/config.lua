@@ -1,10 +1,8 @@
 local fs = require("fs")
 local json = require("json")
-local print_table = require("./print_table.lua")
 local file = fs.readFileSync('./config.json', 'utf8')
 local default = require('../constants/default.lua')
 local decoded = json.decode(file)
-
 
 local function merge_default(def, given)
   if type(given) == "nil" then return def end
@@ -52,4 +50,4 @@ function Get_keys(tab)
   return keyset
 end
 
-print_table(merge_default(default, decoded or {}))
+return merge_default(default, decoded or {})
