@@ -1,6 +1,7 @@
 {
   "server": {
     "port": 3000,
-    "password": "youshallnotpass"
+    "password": "youshallnotpass",
+    "soundcloud": true
   }
 }

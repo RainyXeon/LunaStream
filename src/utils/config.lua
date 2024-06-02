@@ -18,7 +18,7 @@ local function merge_default(def, given)
   end
 
   for _, dkey in pairs(defaultKeys) do
-    if not given[dkey] then given[dkey] = def[dkey] end
+    if type(given[dkey]) == "nil" then given[dkey] = def[dkey] end
     if type(given[dkey]) == "table" then
       merge_default(def[dkey], given[dkey])
     end

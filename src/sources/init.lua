@@ -1,9 +1,12 @@
 local soundcloud = require("../sources/soundcloud.lua")
+local config = require("../utils/config.lua")
 local avaliable = {}
 
 function Init()
-  soundcloud.init()
-  avaliable["scsearch"] = soundcloud
+  if config.server.soundcloud then
+    soundcloud.init()
+    avaliable["scsearch"] = soundcloud
+  end
 end
 
 function Search(query, source)
