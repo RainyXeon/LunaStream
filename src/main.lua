@@ -9,8 +9,8 @@ app.use(weblit.logger)
 app.use(weblit.autoHeaders)
 
 -- A custom route that sends back method and part of url.
+app.use(require("./utils/auth.lua"))
 app.route({ path = "/version"}, require("./router/version.lua"))
-app.use()
 app.route({ path = prefix .. "/info"}, require("./router/info.lua"))
 app.route({ path = prefix .. "/loadtracks"}, require("./router/loadtracks.lua"))
 
