@@ -2,6 +2,7 @@ local fs = require("fs")
 local json = require("json")
 local file = fs.readFileSync('./config.json', 'utf8')
 local default = require('../constants/default.lua')
+if not file then file = "{}" end
 local decoded = json.decode(file)
 
 local function merge_default(def, given)
