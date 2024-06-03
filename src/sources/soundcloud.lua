@@ -49,15 +49,36 @@ end
 
 function soundcloud.search(query)
 	local query_link =
-		soundcloud.baseUrl .. "/search" .. "?q=" .. url.encode(
-			query
-		) .. "&variant_ids=" .. "&facet=model" .. "&user_id=992000-167630-994991-450103" .. "&client_id=" .. soundcloud.clientId .. "&limit=" .. "20" .. "&offset=0" .. "&linked_partitioning=1" .. "&app_version=1679652891" .. "&app_locale=en"
+		soundcloud.baseUrl
+		.. "/search"
+		.. "?q=" .. url.encode(query)
+		.. "&variant_ids="
+		.. "&facet=model"
+		.. "&user_id=992000-167630-994991-450103"
+		.. "&client_id=" .. soundcloud.clientId
+		.. "&limit=" .. "20"
+		.. "&offset=0"
+		.. "&linked_partitioning=1"
+		.. "&app_version=1679652891"
+		.. "&app_locale=en"
 
 	local response, res_body = http.request("GET", query_link)
 	if response.code ~= 200 then
-		return nil, "Server response error: " .. response.code
+		return {
+			loadType = "error",
+			tracks = {},
+			message = "Server response error: " .. response.code
+		}, nil
 	end
 	local decoded = json.decode(res_body)
+
+	if #decoded.collection == 0 then
+		return {
+			loadType = "empty",
+			tracks = { nil }
+		}
+	end
+
 	local res = {}
 	local counter = 1
 
@@ -69,7 +90,98 @@ function soundcloud.search(query)
 		end
 	end
 
-	return res, nil
+	return {
+		loadType = "search",
+		tracks = res
+	}
+end
+
+function soundcloud.loadForm(query)
+	local query_link =
+		soundcloud.baseUrl
+		.. "/resolve"
+		.. "?url=" .. url.encode(query)
+		.. "&client_id=" .. url.encode(soundcloud.clientId)
+
+	local response, res_body = http.request("GET", query_link)
+	if response.code ~= 200 then
+		return {
+			loadType = "error",
+			tracks = {},
+			message = "Server response error: " .. response.code
+		}, nil
+	end
+
+	local body = json.decode(res_body)
+
+	if body.kind == "track" then
+		return {
+			loadType = "track",
+			tracks = { soundcloud.buildTrack(body) },
+		}
+	elseif body.kind == "playlist" then
+		local loaded = {}
+		local unloaded = {}
+
+		for _, raw in pairs(body.tracks) do
+			if not raw.title then
+				unloaded[#unloaded + 1] = tostring(raw.id)
+			else
+				loaded[#loaded + 1] = soundcloud.buildTrack(raw)
+			end
+		end
+
+		if #unloaded ~= 0 then
+			local unloaded_query_link =
+				soundcloud.baseUrl
+				.. "/tracks"
+				.. "?ids=" .. soundcloud.merge(unloaded)
+				.. "&client_id=" .. url.encode(soundcloud.clientId)
+			local unloaded_response, unloaded_res_body = http.request("GET", unloaded_query_link)
+			if unloaded_response.code == 200 then
+				local unloaded_body = json.decode(unloaded_res_body)
+				for key, raw in pairs(unloaded_body) do
+					loaded[#loaded + 1] = soundcloud.buildTrack(raw)
+					unloaded_body[key] = nil
+				end
+			else end
+		end
+
+		return {
+			loadType = 'playlist',
+			info = {
+				name = body.title,
+				selectedTrack = 0,
+			},
+			tracks = loaded,
+		}
+	end
+
+	return {
+		loadType = "empty",
+    tracks = { nil },
+  }
+end
+
+function soundcloud.isLinkMatch(query)
+	local check1 = query:match("https?://www%.soundcloud%.com/[^%s]+/[^%s]+")
+	local check2 = query:match("https?://soundcloud%.com/[^%s]+/[^%s]+")
+	local check3 = query:match("https?://m%.soundcloud%.com/[^%s]+/[^%s]+")
+	if check1 or check2 or check3 then return true end
+	return false
+end
+
+function soundcloud.merge(unloaded)
+	local res = ""
+
+	for i = 1, #unloaded do
+		res = res .. unloaded[i]
+		if i ~= #unloaded then
+			res = res .. "%2C"
+		end
+	end
+
+	return res
 end
 
 function soundcloud.buildTrack(data)

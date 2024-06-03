@@ -9,7 +9,7 @@
 
 (async () => {
   const URL = 'http://127.0.0.1'
-  const PORT = 8888
+  const PORT = 3000
   const PATH = '/version'
   const BODY = null
   
