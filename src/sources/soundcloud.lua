@@ -1,5 +1,6 @@
 local http = require("coro-http")
 local url = require("../utils/url.lua")
+local mod_table = require("../utils/mod_table.lua")
 local json = require("json")
 
 local soundcloud = {
@@ -131,11 +132,29 @@ function soundcloud.loadForm(query)
 			end
 		end
 
-		if #unloaded ~= 0 then
+		local playlist_stop = false
+		local is_one = false
+
+		while playlist_stop == false do
+			if is_one then break end
+			local notLoadedLimited
+			local filtered
+
+			if #unloaded > 50 then
+				notLoadedLimited = mod_table.split(unloaded, 1, 50)
+				filtered = mod_table.split(unloaded, 50, #unloaded)
+			elseif #unloaded == 1 then
+				notLoadedLimited = { unloaded[1] }
+				filtered = nil
+			else
+				notLoadedLimited = mod_table.split(unloaded, 1, #unloaded)
+				filtered = mod_table.split(unloaded, #unloaded, #unloaded)
+			end
+
 			local unloaded_query_link =
 				soundcloud.baseUrl
 				.. "/tracks"
-				.. "?ids=" .. soundcloud.merge(unloaded)
+				.. "?ids=" .. soundcloud.merge(notLoadedLimited)
 				.. "&client_id=" .. url.encode(soundcloud.clientId)
 			local unloaded_response, unloaded_res_body = http.request("GET", unloaded_query_link)
 			if unloaded_response.code == 200 then
@@ -145,6 +164,10 @@ function soundcloud.loadForm(query)
 					unloaded_body[key] = nil
 				end
 			else end
+			if filtered == nil then playlist_stop = true
+			elseif #filtered == 0 then playlist_stop = true
+			else unloaded = filtered end
+			if #unloaded == 1 then is_one = true end
 		end
 
 		return {
