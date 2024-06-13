@@ -30,6 +30,9 @@ The encoded track format is different from Lavalink, aim to have an easy way to 
 The fields must strictly follow the order and length, or else LunaStream will not be able to decode the track and will reject the client's request.
 
 > [!NOTE]
+
 > Current version for this encoded track is 1 
+
 > Clients MUST only decode the track if the version is 1.
+
 > If the version is different, the client MUST reject the track.
