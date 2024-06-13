@@ -8,7 +8,9 @@ return {
   homepage = "https://github.com/RainyXeon/LunaStream",
   dependencies = {
     "creationix/weblit@3.1.2",
-    "luvit/luvit@2.18.1",
+    "luvit/require@2.2.3",
+    "luvit/process@2.1.3",
+    "luvit/dns@2.0.4",
     "creationix/coro-http@v3.2.3",
     "luvit/secure-socket@v1.2.3"
   },

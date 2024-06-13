@@ -213,19 +213,24 @@ function soundcloud.buildTrack(data)
 		isrc = data.publisher_metadata.isrc
 	end
 
+	local info = {
+		title = data.title,
+		author = data.user.permalink,
+		identifier = tostring(data.id),
+		uri = data.permalink_url,
+		is_stream = false,
+		is_seekable = true,
+		source_name = "soundcloud",
+		isrc = isrc,
+		artwork_url = data.artwork_url,
+		length = data.full_duration,
+	}
+
+	local encoded = require("../track/encoder.lua")(info)
+
 	return {
-		info = {
-			title = data.title,
-			author = data.user.permalink,
-			identifier = data.id,
-			uri = data.permalink_url,
-			is_stream = false,
-			is_seekable = true,
-			source_name = "soundcloud",
-			isrc = isrc,
-			artwork_url = data.artwork_url,
-			length = data.full_duration,
-		},
+		encoded = encoded,
+		info = info
 	}
 end
 
