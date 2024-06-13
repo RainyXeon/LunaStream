@@ -2,7 +2,11 @@ local weblit = require('weblit')
 local config = require('./utils/config.lua')
 local app = weblit.app
 local prefix = "/v" .. require('./constants/metadata.lua').version.major
-app.bind({host = "127.0.0.1", port = config.server.port})
+
+app.bind({
+  host = config.server.host,
+  port = config.server.port
+})
 
 -- Configure weblit server
 app.use(require("./utils/req_logger.lua"))
