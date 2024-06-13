@@ -3,7 +3,7 @@ local config = require("../utils/config.lua")
 local avaliable = {}
 
 function Init()
-  if config.server.soundcloud then
+  if config.luna.soundcloud then
     soundcloud.init()
     avaliable["scsearch"] = soundcloud
   end

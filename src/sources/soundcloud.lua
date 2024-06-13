@@ -234,8 +234,4 @@ function soundcloud.buildTrack(data)
 	}
 end
 
--- soundcloud:init()
--- local res = soundcloud:search("Childish Gambino - Redbone")
--- require("../utils/print_table.lua")(res)
-
 return soundcloud
